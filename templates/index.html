@@ -1,0 +1,131 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>{{ titulo }}</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!--[if lte IE 8]>
+    <script src="{{ url_for('static' , filename='assets/js/ie/html5shiv.js') }}"></script><![endif]-->
+
+    <link rel="stylesheet" href="{{ url_for('static' , filename='assets/css/main.css') }}"/>
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" href="{{ url_for('static' , filename='assets/css/ie9.css') }}"/><![endif]-->
+    <!--[if lte IE 8]>
+    <link rel="stylesheet" href="{{ url_for('static' , filename='assets/css/ie8.css') }}"/><![endif]-->
+
+    <link rel="stylesheet" href="{{ url_for('static' , filename='assets/css/main.css') }}"/>
+
+</head>
+<body>
+
+<!-- Sidebar -->
+<section id="sidebar">
+    <div class="inner">
+        <nav>
+            <ul>
+                <li><a href="#intro">Bem vindo</a></li>
+                <li><a href="#two">Ideias cadastradas</a></li>
+                <li><a href="#three">Cadastre uma nova</a></li>
+            </ul>
+        </nav>
+    </div>
+</section>
+
+<!-- Wrapper -->
+<div id="wrapper">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    {% block body %}{% endblock %}
+    <!-- Intro -->
+    <section id="intro" class="wrapper style1 fullscreen fade-up">
+        <div class="inner">
+            <h1>{{ titulo }}</h1>
+            <h3>O que você gostaria de melhorar do seu dia a dia ? </h3>
+            <ul class="actions">
+            </ul>
+        </div>
+    </section>
+
+    <!-- Two -->
+    <section id="two" class="wrapper style3 fade-up">
+        <div class="inner">
+            <h2>Nosso box de ideias</h2>
+            <p>Vote na ideia que você mais gostou.</p>
+            <div class="features">
+                {% if ideas %}
+                    {% for idea in ideas %}
+                        <section>
+                            <h3>Votos : {{ idea.vote }}</h3>
+                            <h5>Ideia : {{ idea.title }}</h5>
+                            <h5>Descrição : {{ idea.description }}</h5>
+                            <button class="button vote-idea" value="{{ idea.id }}">Votar</button>
+                        </section>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Three -->
+    <section id="three" class="wrapper style1 fade-up">
+        <div class="inner">
+            <h2>Box de Ideia</h2>
+            <p>Queremos ouvir você, que tal ter uma ideia sua implementada em um <b>Open Friday.</b></p>
+            <p>O que você gostaria de fazer em um dia fora das suas demandas diarias ? </p>
+            <section>
+                <form action="{{ url_for('ideas') }}" method="post" enctype="multipart/form-data">
+                    <div class="field first">
+                        <label for="name">Titulo</label>
+                        <input type="text" name="title" id="title"/>
+                    </div>
+                    <div class="field">
+                        <label for="email">Descrição</label>
+                        <textarea name="description" id="description">
+                        </textarea>
+                    </div>
+                    <ul class="actions">
+                        <li><a href="" class="button submit">Cadastrar</a></li>
+                    </ul>
+                </form>
+            </section>
+        </div>
+    </section>
+
+</div>
+
+<!-- Footer -->
+<footer id="footer" class="wrapper style1-alt">
+    <div class="inner">
+        <ul class="menu">
+            <li>Grupo Dasa - By Leandro Costa: Leco</li>
+        </ul>
+    </div>
+</footer>
+
+<!-- Scripts -->
+<script src="{{ url_for('static' , filename='assets/js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static' , filename='assets/js/jquery.scrollex.min.js') }}"></script>
+<script src="{{ url_for('static' , filename='assets/js/jquery.scrolly.min.js') }}"></script>
+<script src="{{ url_for('static' , filename='assets/js/skel.min.js') }}"></script>
+<script src="{{ url_for('static' , filename='assets/js/util.js') }}"></script>
+<!--[if lte IE 8]>
+<script src="{{ url_for('static' , filename='assets/js/ie/respond.min.js') }}"></script><![endif]-->
+<script src="{{ url_for('static' , filename='assets/js/main.js') }}"></script>
+<script>
+    $('.vote-idea').click(function () {
+        var id = $(this).val()
+        $.post("/vote/" + id, function (data) {
+            alert(data.message)
+            location.reload()
+        })
+    });
+</script>
+</body>
+</html>
